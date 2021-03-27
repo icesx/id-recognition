@@ -13,12 +13,12 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
             'v', 'w', 'x', 'y', 'z']
 ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
             'V', 'W', 'X', 'Y', 'Z']
-SAVE_PATH = "D:/test/tf2/keras_cnn/"
+SAVE_PATH = "module/keras_cnn/"
 CHAR_SET = number + alphabet + ALPHABET
 CHAR_SET_LEN = len(CHAR_SET)
 IMAGE_HEIGHT = 60
 IMAGE_WIDTH = 160
-gpu_init()
+#gpu_init()
 
 
 def random_captcha_text(char_set=None, captcha_size=4):
@@ -47,6 +47,7 @@ def gen_captcha_text_and_image(width=160, height=60, char_set=CHAR_SET):
 
 text, image = gen_captcha_text_and_image(char_set=CHAR_SET)
 MAX_CAPTCHA = len(text)
+print("MAX_CAPTCHA",MAX_CAPTCHA)
 print('CHAR_SET_LEN=', CHAR_SET_LEN, ' MAX_CAPTCHA=', MAX_CAPTCHA)
 
 
