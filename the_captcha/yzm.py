@@ -157,9 +157,9 @@ def train():
     print(' batch_x.shape=', batch_x.shape, ' batch_y.shape=', batch_y.shape)
     batch_x_val, batch_y_val = get_next_batch(100)
     model.fit(batch_x, batch_y,
-              batch_size=40,
-              epochs=100,
-              steps_per_epoch=1250,
+              batch_size=25,
+              epochs=80,
+              steps_per_epoch=2000,
               validation_data=(batch_x_val, batch_y_val))
     print("y预测=\n", np.argmax(model.predict(batch_x), axis=2))
     print("y实际=\n", np.argmax(batch_y, axis=2))
