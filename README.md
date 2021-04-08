@@ -1,4 +1,5 @@
 # id-recognition
+<<<<<<< HEAD
 使用tensorflow进行图片中数字或者文字序列的识别
 
 ### captcha
@@ -43,3 +44,6 @@
 
 ### 训练过程
 
+=======
+id-recognition
+>>>>>>> cdcaca27417a25e0bd174c9e8c08582d3692be39

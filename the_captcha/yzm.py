@@ -14,7 +14,7 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
             'v', 'w', 'x', 'y', 'z']
 ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
             'V', 'W', 'X', 'Y', 'Z']
-SAVE_PATH = "../model"
+SAVE_PATH = "./model"
 CHAR_SET = number + alphabet + ALPHABET
 CHAR_SET_LEN = len(CHAR_SET)
 IMAGE_HEIGHT = 60
@@ -157,9 +157,9 @@ def train():
     print(' batch_x.shape=', batch_x.shape, ' batch_y.shape=', batch_y.shape)
     batch_x_val, batch_y_val = get_next_batch(100)
     model.fit(batch_x, batch_y,
-              batch_size=25,
+              batch_size=20,
               epochs=80,
-              steps_per_epoch=2000,
+              steps_per_epoch=2500,
               validation_data=(batch_x_val, batch_y_val))
     print("y预测=\n", np.argmax(model.predict(batch_x), axis=2))
     print("y实际=\n", np.argmax(batch_y, axis=2))
