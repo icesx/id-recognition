@@ -8,12 +8,15 @@ from PIL import Image
 from captcha.image import ImageCaptcha
 
 from gpu_init import gpu_init
+from plot import *
 
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-            'v', 'w', 'x', 'y', 'z']
-ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-            'V', 'W', 'X', 'Y', 'Z']
+alphabet=[]
+ALPHABET = []
+# alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+#             'v', 'w', 'x', 'y', 'z']
+# ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+#             'V', 'W', 'X', 'Y', 'Z']
 SAVE_PATH = "./model"
 CHAR_SET = number + alphabet + ALPHABET
 CHAR_SET_LEN = len(CHAR_SET)
@@ -33,7 +36,7 @@ def random_captcha_text(char_set=None, captcha_size=4):
     return captcha_text
 
 
-def gen_captcha_text_and_image(width=160, height=60, char_set=CHAR_SET):
+def gen_captcha_text_and_image(width=IMAGE_WIDTH, height=IMAGE_HEIGHT, char_set=CHAR_SET):
     image = ImageCaptcha(width=width, height=height)
 
     captcha_text = random_captcha_text(char_set)
@@ -81,12 +84,14 @@ def get_next_batch(batch_size=128):
     def wrap_gen_captcha_text_and_image():
         while True:
             text, image = gen_captcha_text_and_image(char_set=CHAR_SET)
-            if image.shape == (60, 160, 3):
+            if image.shape == (IMAGE_HEIGHT, IMAGE_WIDTH, 3):
                 return text, image
 
     for i in range(batch_size):
         text, image = wrap_gen_captcha_text_and_image()
-        image = tf.reshape(convert2gray(image), (IMAGE_HEIGHT, IMAGE_WIDTH, 1))
+        gray_image = convert2gray(image)
+
+        image = tf.reshape(gray_image, (IMAGE_HEIGHT, IMAGE_WIDTH, 1))
         batch_x[i, :] = image
         batch_y[i, :] = text2vec(text)
 
@@ -96,7 +101,7 @@ def get_next_batch(batch_size=128):
 def crack_captcha_cnn():
     # model = tf.keras.Sequential()
     #
-    # model.add(tf.keras.layers.Conv2D(32, (3, 3)))
+    # model.add(tf.keras.layers.Conv2D(32, (3, 3), input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 1)))
     # model.add(tf.keras.layers.PReLU())
     # model.add(tf.keras.layers.MaxPool2D((2, 2), strides=2))
     #
@@ -114,26 +119,24 @@ def crack_captcha_cnn():
     # model.add(tf.keras.layers.Softmax())
 
     model = keras.Sequential([
-        keras.layers.Conv2D(32, (3, 3), input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 1)),
-        keras.layers.PReLU(),
+        keras.layers.Conv2D(32, (2, 2), input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 1), activation="relu"),
+        # keras.layers.ReLU(),
         # kernel_regularizer=keras.regularizers.l2(0.0001)),
-        keras.layers.MaxPool2D((2, 2), strides=2),
-        # keras.layers.Dropout(rate=0.02),
-        keras.layers.Conv2D(64, (3, 3)),
-        keras.layers.PReLU(),
-        keras.layers.MaxPool2D((2, 2), strides=2),
-        keras.layers.Conv2D(64, (3, 3), padding="same"),
-        keras.layers.PReLU(),
-        keras.layers.MaxPool2D((2, 2), strides=2),
-        keras.layers.Conv2D(96, (3, 3), padding="same"),
-        keras.layers.PReLU(),
-        keras.layers.MaxPool2D((2, 2), strides=2),
-        keras.layers.Conv2D(120, (3, 3), padding="same"),
-        keras.layers.PReLU(),
-        keras.layers.MaxPool2D((2, 2), strides=2, padding="same"),
-        # keras.layers.Conv2D(256, (3, 3), activation="relu",padding="same"),
-        # keras.layers.MaxPool2D((2, 2), strides=2),
-        # keras.layers.Dropout(rate=0.02),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Dropout(rate=0.02),
+        keras.layers.Conv2D(32, (2, 2), activation="relu"),
+        # keras.layers.ReLU(),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(64, (2, 2), activation="relu"),
+        # keras.layers.ReLU(),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(64, (2, 2), activation="relu"),
+        # keras.layers.ReLU(),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(128, (2, 2), activation="relu",padding="same"),
+        # keras.layers.ReLU(),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Dropout(rate=0.02),
         keras.layers.Flatten(),
         keras.layers.Dense(MAX_CAPTCHA * CHAR_SET_LEN),
         keras.layers.Reshape([MAX_CAPTCHA, CHAR_SET_LEN]),
@@ -149,17 +152,20 @@ def train():
     #     print('#######Exception', e)
     #     model = crack_captcha_cnn()
     model = crack_captcha_cnn()
-    model.compile(optimizer='Adam',
+    optimizer = tf.keras.optimizers.Adam()
+    model.compile(optimizer=optimizer,
                   metrics=['accuracy'],
                   loss='categorical_crossentropy')
     model.summary()
-    batch_x, batch_y = get_next_batch(50000)
+    batch_x, batch_y = get_next_batch(20000)
+    plot_shows([tf.reshape(i, [IMAGE_HEIGHT, IMAGE_WIDTH]) for i in batch_x[:20]],
+               [vec2text(np.argmax(i, axis=1)) for i in batch_y[:20]])
     print(' batch_x.shape=', batch_x.shape, ' batch_y.shape=', batch_y.shape)
     batch_x_val, batch_y_val = get_next_batch(100)
     model.fit(batch_x, batch_y,
-              batch_size=20,
-              epochs=80,
-              steps_per_epoch=2500,
+              batch_size=40,
+              epochs=50,
+              steps_per_epoch=500,
               validation_data=(batch_x_val, batch_y_val))
     print("y预测=\n", np.argmax(model.predict(batch_x), axis=2))
     print("y实际=\n", np.argmax(batch_y, axis=2))
