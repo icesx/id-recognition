@@ -7,52 +7,41 @@
 import tensorflow as tf
 from tensorflow import keras
 
-from gen import *
+import tf_board
+from dataset.create_dataset import DatasetCreator
 from gpu_init import gpu_init
+
 IMAGE_HEIGHT = 32
 IMAGE_WIDTH = 256
 MAX_CAPTCHA = 10
 CHAR_SET_LEN = 18
 
 
-# 生成一个训练batch
-def get_next_batch(batch_size=1000):
-    obj = gen_id_card()
-    batch_x = np.zeros([batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, 3])
-    batch_y = np.zeros([batch_size, MAX_CAPTCHA * CHAR_SET_LEN])
-
-    for i in range(batch_size):
-        image, text, vec = obj.gen_image()
-        batch_x[i, :] = image
-        batch_y[i, :] = vec
-    return batch_x, batch_y
-
-
-def load_mnist(batch_size=1000):
-    train_images, train_labels = get_next_batch(batch_size)
-    print(train_images.shape, len(train_images))
-    print(train_labels.shape, len(train_labels))
-    return train_images, train_labels
-
-
-def run_module(train_images, train_lables):
+def run_module(train_ds, val_ds, epochs, steps_per_epoch):
     gpu_init()
     module = keras.Sequential([
-        keras.layers.Conv2D(120, (2, 2), activation="relu", input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3)),
+        keras.layers.Conv2D(32, (2, 2), activation="relu", input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)),
         keras.layers.MaxPool2D((2, 2)),
         keras.layers.Conv2D(64, (2, 2), activation="relu"),
         keras.layers.MaxPool2D((2, 2)),
-        keras.layers.Conv2D(64, (2, 2), activation="relu"),
+        keras.layers.Conv2D(128, (2, 2), activation="relu"),
         keras.layers.Flatten(),
         keras.layers.Dense(180),
-        keras.layers.Reshape([10,18]),
+        keras.layers.Reshape([10, 18]),
+        keras.layers.Flatten(),
         keras.layers.Softmax()
     ])
     module.compile(optimizer="adam",
                    loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True),
                    metrics=['accuracy'])
     module.summary()
-    module.fit(train_images, train_lables, epochs=5, batch_size=128)
+    module.fit(train_ds,
+               epochs=epochs,
+               steps_per_epoch=steps_per_epoch,
+               validation_steps=steps_per_epoch,
+               validation_data=val_ds,
+               callbacks=[tf_board.tb.tf_board_instance("id-recognition")]
+               )
     return module
 
 
@@ -62,11 +51,6 @@ def predict(module, test_images, test_lables):
     print(test_lables[0], tf.argmax(prediced[0]))
 
 
-def evaluate(module, test_images, test_lables):
-    test_loss, test_acc = module.evaluate(test_images, test_labels, verbose=2)
-    print("testloss=", test_loss, "test_acc=", test_acc)
-
-
 def save_module(module, export_dir):
     print("save module ", module, "to dir ", export_dir, "..")
     tf.saved_model.save(module, export_dir=export_dir)
@@ -74,9 +58,9 @@ def save_module(module, export_dir):
 
 
 if __name__ == '__main__':
-    train_images, train_labels = load_mnist()
-    test_images, test_labels = load_mnist(batch_size=100)
-    module = run_module(train_images, train_labels)
-    evaluate(module, test_images, test_labels)
-    predict(module, test_images, test_labels)
-    save_module(module)
+    creator = DatasetCreator(IMAGE_WIDTH, IMAGE_HEIGHT)
+    val_creator = DatasetCreator(IMAGE_WIDTH, IMAGE_HEIGHT)
+    _train_ds = creator.load("/OTHER/dataset/id_card/train/").shuffle_and_repeat().batch(50)
+    _val_ds = creator.load("/OTHER/dataset/id_card/val/").shuffle_and_repeat().batch(10)
+    module = run_module(_train_ds, _val_ds, epochs=100, steps_per_epoch=20)
+    # save_module(module)

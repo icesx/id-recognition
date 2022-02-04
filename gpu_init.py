@@ -6,7 +6,7 @@
 import tensorflow as tf
 
 
-def gpu_init(memery_mb=6400):
+def gpu_init(memery_mb=4500):
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         try:

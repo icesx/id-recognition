@@ -162,9 +162,11 @@ import os
 
 if __name__ == '__main__':
     genObj = gen_id_card()
-    for i in range(10000):
+    for index, val in enumerate(range(3000)):
         image_data, label, vec = genObj.gen_image()
-        print(label)
-        dir = "/WORK/datasset/id_card/" + label + "/"
-        os.mkdir(dir)
-        cv2.imwrite(dir + label + ".png", image_data)
+        dir = "/OTHER/dataset/id_card/val/"
+        if os.path.exists(dir) is False:
+            os.mkdir(dir)
+        png_ = dir + str(index) + "_" + label + ".png"
+        print(png_)
+        cv2.imwrite(png_, image_data)

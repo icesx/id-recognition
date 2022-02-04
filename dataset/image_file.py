@@ -7,27 +7,25 @@ import random
 
 import tensorflow as tf
 
-from utils import IDG
-
 ALL_LABELS = dict()
 
 
-def regist_label(label_name):
-    label = ALL_LABELS.get(label_name)
+def regist_label(index_label):
+    label = ALL_LABELS.get(index_label[0])
     if label is None:
-        label = LabelInfo(label_name, IDG.next_id())
-        ALL_LABELS.update({label_name: label})
+        label = LabelInfo(index_label[0], index_label[1])
+        ALL_LABELS.update({index_label[0]: index_label[1]})
     return label
 
 
 class LabelInfo:
 
-    def __init__(self, label_name, label_idx):
+    def __init__(self, label_idx: int, label_name: str):
         self.__label_name = label_name
         self.__label_idx = label_idx
 
     def __str__(self):
-        return self.__label_name + ":" + str(self.__label_idx)
+        return str(self.__label_idx) + ":" + self.__label_name
 
     def __repr__(self):
         return str(self)
@@ -44,7 +42,7 @@ class LabelInfo:
 class ImageInfo:
 
     def __init__(self, path):
-        self.__path = path
+        self.__path = pathlib.Path(path)
         self.__label = regist_label(self.__detect_label())
 
     def __repr__(self):
@@ -66,12 +64,13 @@ class ImageInfo:
         return self.__label
 
     def __detect_label(self):
-        return self.__path.parent.name
+        _name_split = self.__path.name.split("_")
+        return int(_name_split[0]), _name_split[1].split(".")[0]
 
 
-def __image_paths(root_path) -> [ImageInfo]:
-    root_path = pathlib.Path(root_path)
-    images = sorted(list(root_path.glob('*/*')))
+def __image_paths(root) -> [ImageInfo]:
+    root_path = pathlib.Path(root)
+    images = sorted(list(root_path.glob('*')))
     image_infos = [ImageInfo(path) for path in images]
     random.shuffle(image_infos)
     print("First 10 image_infos: ", image_infos[:10])

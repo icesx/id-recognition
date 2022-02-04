@@ -1,3 +1,4 @@
+from dataset.dataset_sample import take_sample
 from dataset.image_file import *
 
 
@@ -38,16 +39,15 @@ class DatasetCreator:
             tf.cast([ii.label_info.label_idx for ii in image_infos], tf.int64))
         self.__ds = tf.data.Dataset.zip((image_ds, label_ds))
         cache_name = "val" if is_val is True else "train"
-        self.__ds = self.__ds.cache()
+        self.__ds = self.__ds
         return self
 
 
 if __name__ == '__main__':
-    dataset_creator = DatasetCreator().load('/WORK/datasset/mnist/train')
-    ds = dataset_creator.batch(15)
+    dataset_creator = DatasetCreator().load('/OTHER/dataset/id_card/train')
     # for element in ds:
     #     print(element)
-    sample = dataset_creator.take_sample(0.001)
+    sample = take_sample(dataset_creator.batch(15), 0.001)
     for element in sample:
         print(element)
     for lable, label_info in ALL_LABELS.items():

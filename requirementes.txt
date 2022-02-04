@@ -1,2 +1,4 @@
 pillow
 captcha
+opencv-python
+freetype-py
