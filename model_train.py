@@ -7,9 +7,9 @@
 import tensorflow as tf
 from tensorflow import keras
 
-import tf_board
+from utils import tf_board
 from dataset.create_dataset import DatasetCreator
-from gpu_init import gpu_init
+from utils.gpu_init import gpu_init
 
 IMAGE_HEIGHT = 32
 IMAGE_WIDTH = 256
