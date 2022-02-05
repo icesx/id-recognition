@@ -11,10 +11,12 @@ import cv2
 import freetype
 import numpy as np
 
+from define import CHAR_SET, MAX_CAPTCHA
+
 
 # import unicode
 
-class put_chinese_text(object):
+class TextDrawer(object):
     def __init__(self, ttf):
         self._face = freetype.Face(ttf)
 
@@ -104,64 +106,35 @@ class put_chinese_text(object):
                     img[y_pos + row][x_pos + col][2] = color[2]
 
 
-class gen_id_card(object):
+class GenIdCard(object):
     def __init__(self):
-        # self.words = open('AllWords.txt', 'r').read().split(' ')
-        self.number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-        self.char_set = self.number
-        # self.char_set = self.words + self.number
-        self.len = len(self.char_set)
-
-        self.max_size = 18
-        self.ft = put_chinese_text('fonts/OcrB2.ttf')
+        self.ft = TextDrawer('fonts/OcrB2.ttf')
 
     # 随机生成字串，长度固定
-    # 返回text,及对应的向量
-    def __random_text(self):
+    @staticmethod
+    def __random_text():
         text = ''
-        vecs = np.zeros((self.max_size * self.len))
-        # size = random.randint(1, self.max_size)
-        size = self.max_size
-        for i in range(size):
-            c = random.choice(self.char_set)
-            vec = self.__char2vec(c)
+        for i in range(MAX_CAPTCHA):
+            c = random.choice(CHAR_SET)
             text = text + c
-            vecs[i * self.len:(i + 1) * self.len] = np.copy(vec)
-        return text, vecs
+        return text
 
     # 根据生成的text，生成image,返回标签和图片元素数据
     def gen_image(self):
-        text, vec = self.__random_text()
+        text = self.__random_text()
         img = np.zeros([32, 256, 3])
         color_ = (255, 255, 255)  # Write
         pos = (0, 0)
         text_size = 21
         image = self.ft.draw_text(img, pos, text, text_size, color_)
         # 仅返回单通道值，颜色对于汉字识别没有什么意义
-        return image, text, vec
-
-    # 单字转向量
-    def __char2vec(self, c):
-        vec = np.zeros((self.len))
-        for j in range(self.len):
-            if self.char_set[j] == c:
-                vec[j] = 1
-        return vec
-
-    # 向量转文本
-    def __vec2text(self, vecs):
-        text = ''
-        v_len = len(vecs)
-        for i in range(v_len):
-            if (vecs[i] == 1):
-                text = text + self.char_set[i % self.len]
-        return text
+        return image, text
 
 
 import os
 
 if __name__ == '__main__':
-    genObj = gen_id_card()
+    genObj = GenIdCard()
     for index, val in enumerate(range(3000)):
         image_data, label, vec = genObj.gen_image()
         dir = "/OTHER/dataset/id_card/val/"

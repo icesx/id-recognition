@@ -7,15 +7,7 @@ import random
 
 import tensorflow as tf
 
-ALL_LABELS = dict()
-
-
-def regist_label(index_label):
-    label = ALL_LABELS.get(index_label[0])
-    if label is None:
-        label = LabelInfo(index_label[0], index_label[1])
-        ALL_LABELS.update({index_label[0]: index_label[1]})
-    return label
+from vector.label_vector import LabelVector
 
 
 class LabelInfo:
@@ -43,7 +35,9 @@ class ImageInfo:
 
     def __init__(self, path):
         self.__path = pathlib.Path(path)
-        self.__label = regist_label(self.__detect_label())
+        lv = LabelVector(self.__detect_label()[1])
+        self.__label_vector = lv.vector
+        self.__label = lv.label
 
     def __repr__(self):
         return str(self)
@@ -60,8 +54,8 @@ class ImageInfo:
         return self.__path
 
     @property
-    def label_info(self):
-        return self.__label
+    def label_vector(self):
+        return self.__label_vector
 
     def __detect_label(self):
         _name_split = self.__path.name.split("_")
@@ -81,7 +75,7 @@ def image_labels(root: object) -> [ImageInfo]:
     root_path = pathlib.Path(root)
     image_infos = __image_paths(root_path)
     print("First 10 images: ", image_infos[:10])
-    print("First 10 labels indices: ", [i.label_info for i in image_infos[:10]])
+    print("First 10 labels indices: ", [i.label_vector for i in image_infos[:10]])
     return image_infos
 
 
