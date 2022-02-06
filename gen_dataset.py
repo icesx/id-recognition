@@ -11,7 +11,7 @@ import cv2
 import freetype
 import numpy as np
 
-from define import CHAR_SET, MAX_CAPTCHA
+from define import CHAR_SET, MAX_CAPTCHA, IMAGE_HEIGHT, IMAGE_WIDTH
 
 
 # import unicode
@@ -122,7 +122,7 @@ class GenIdCard(object):
     # 根据生成的text，生成image,返回标签和图片元素数据
     def gen_image(self):
         text = self.__random_text()
-        img = np.zeros([32, 256, 3])
+        img = np.zeros([IMAGE_HEIGHT, IMAGE_WIDTH, 3])
         color_ = (255, 255, 255)  # Write
         pos = (0, 0)
         text_size = 21
@@ -133,13 +133,18 @@ class GenIdCard(object):
 
 import os
 
-if __name__ == '__main__':
+
+def genn_dataset(count, dir):
     genObj = GenIdCard()
-    for index, val in enumerate(range(3000)):
-        image_data, label, vec = genObj.gen_image()
-        dir = "/OTHER/dataset/id_card/val/"
+    for index, val in enumerate(range(count)):
+        image_data, label = genObj.gen_image()
         if os.path.exists(dir) is False:
             os.mkdir(dir)
-        png_ = dir + str(index) + "_" + label + ".png"
+        png_ = dir + label + ".png"
         print(png_)
         cv2.imwrite(png_, image_data)
+
+
+if __name__ == '__main__':
+    genn_dataset(10000, "/OTHER/dataset/id_card/train/")
+    genn_dataset(1000, "/OTHER/dataset/id_card/val/")

@@ -16,7 +16,7 @@ from utils.gpu_init import gpu_init
 def run_model(train_ds, val_ds, epochs, steps_per_epoch):
     gpu_init()
     _model = keras.Sequential([
-        keras.layers.Conv2D(32, (2, 2), activation="relu", input_shape=(IMAGE_WIDTH, IMAGE_HEIGHT, 3)),
+        keras.layers.Conv2D(32, (2, 2), activation="relu", input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3)),
         keras.layers.MaxPool2D((2, 2)),
         keras.layers.Conv2D(64, (2, 2), activation="relu"),
         keras.layers.MaxPool2D((2, 2)),
@@ -56,9 +56,9 @@ def save_model(_model, export_dir):
 
 
 if __name__ == '__main__':
-    creator = DatasetCreator(IMAGE_WIDTH, IMAGE_HEIGHT)
-    val_creator = DatasetCreator(IMAGE_WIDTH, IMAGE_HEIGHT)
-    _train_ds = creator.load("/OTHER/dataset/id_card/train/").shuffle_and_repeat().batch(50)
+    creator = DatasetCreator(IMAGE_HEIGHT, IMAGE_WIDTH)
+    val_creator = DatasetCreator(IMAGE_HEIGHT, IMAGE_WIDTH)
+    _train_ds = creator.load("/OTHER/dataset/id_card/train/").shuffle_and_repeat().batch(1000)
     _val_ds = creator.load("/OTHER/dataset/id_card/val/").shuffle_and_repeat().batch(10)
-    model = run_model(_train_ds, _val_ds, epochs=100, steps_per_epoch=20)
+    model = run_model(_train_ds, _val_ds, epochs=100, steps_per_epoch=100)
     # save_module(module)

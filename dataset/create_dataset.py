@@ -4,9 +4,9 @@ from dataset.image_file import *
 
 class DatasetCreator:
 
-    def __init__(self, image_x=64, image_y=64):
-        self.__image_x = image_x
-        self.__image_y = image_y
+    def __init__(self, height, width):
+        self.__height = height
+        self.__width = width
         self.__ds = None
 
     def load(self, root):
@@ -20,7 +20,7 @@ class DatasetCreator:
         return self
 
     def __load_and_preprocess_from_path_label(self, path):
-        return image_byte_array(path, self.__image_x, self.__image_y)
+        return image_byte_array(path, self.__height, self.__width)
 
     def __create_dataset(self, root):
         image_infos = image_labels(root)
@@ -40,7 +40,3 @@ if __name__ == '__main__':
     sample = take_sample(dataset_creator.batch(15), 0.001)
     for element in sample:
         print(element)
-    from vector import charIndex
-
-    for lable, label_info in charIndex.all_char.items():
-        print(lable, label_info)

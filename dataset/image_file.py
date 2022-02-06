@@ -35,7 +35,7 @@ class ImageInfo:
 
     def __init__(self, path):
         self.__path = pathlib.Path(path)
-        lv = LabelVector(self.__detect_label()[1])
+        lv = LabelVector(self.__detect_label())
         self.__label_vector = lv.vector
         self.__label = lv.label
 
@@ -58,8 +58,7 @@ class ImageInfo:
         return self.__label_vector
 
     def __detect_label(self):
-        _name_split = self.__path.name.split("_")
-        return int(_name_split[0]), _name_split[1].split(".")[0]
+        return self.__path.name.split(".")[0]
 
 
 def __image_paths(root) -> [ImageInfo]:
@@ -79,9 +78,9 @@ def image_labels(root: object) -> [ImageInfo]:
     return image_infos
 
 
-def image_byte_array(path, image_x, image_y):
+def image_byte_array(path, height, width):
     image = tf.io.read_file(path)
     image = tf.image.decode_jpeg(image, channels=3)
-    image = tf.image.resize(image, [image_x, image_y])
+    image = tf.image.resize(image, [height, width])
     image /= 255.0
     return image
