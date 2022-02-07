@@ -1,5 +1,5 @@
-from dataset.dataset_sample import take_sample
 from dataset.image_file import *
+from define import IMAGE_HEIGHT, IMAGE_WIDTH
 
 
 class DatasetCreator:
@@ -8,6 +8,10 @@ class DatasetCreator:
         self.__height = height
         self.__width = width
         self.__ds = None
+        self.__base_ds = None
+
+    def base_ds(self):
+        return self.__base_ds
 
     def load(self, root):
         return self.__create_dataset(root)
@@ -30,13 +34,18 @@ class DatasetCreator:
             tf.cast([ii.label_vector for ii in image_infos], tf.int64))
         self.__ds = tf.data.Dataset.zip((image_ds, label_ds))
         self.__ds = self.__ds
+        self.__base_ds = self.__ds
         return self
+
+    def take(self, count=10):
+        return self.__ds.take(count)
 
 
 if __name__ == '__main__':
-    dataset_creator = DatasetCreator().load('/OTHER/dataset/id_card/train')
-    # for element in ds:
-    #     print(element)
-    sample = take_sample(dataset_creator.batch(15), 0.001)
-    for element in sample:
-        print(element)
+    dataset_creator = DatasetCreator(IMAGE_HEIGHT, IMAGE_WIDTH).load('/OTHER/dataset/id_card/train')
+    # for element in dataset_creator.sample():
+    #     print("image:" + str(element[0]))
+    #     print("label:" + str(element[1]))
+    for i in dataset_creator.take(1).as_numpy_iterator():
+        print("image:" + str(i[0]))
+        print("label:" + str(i[1]))

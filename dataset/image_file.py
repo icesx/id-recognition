@@ -7,7 +7,8 @@ import random
 
 import tensorflow as tf
 
-from vector.label_vector import LabelVector
+from dataset.label_vector import LabelVector
+from define import IMAGE_CHANNELS
 
 
 class LabelInfo:
@@ -73,14 +74,14 @@ def __image_paths(root) -> [ImageInfo]:
 def image_labels(root: object) -> [ImageInfo]:
     root_path = pathlib.Path(root)
     image_infos = __image_paths(root_path)
-    print("First 10 images: ", image_infos[:10])
-    print("First 10 labels indices: ", [i.label_vector for i in image_infos[:10]])
+    print("First 1 images: ", image_infos[:1])
+    print("First 1 labels indices: ", [i.label_vector for i in image_infos[:1]])
     return image_infos
 
 
 def image_byte_array(path, height, width):
     image = tf.io.read_file(path)
-    image = tf.image.decode_jpeg(image, channels=3)
+    image = tf.image.decode_jpeg(image, channels=IMAGE_CHANNELS)
     image = tf.image.resize(image, [height, width])
     image /= 255.0
     return image

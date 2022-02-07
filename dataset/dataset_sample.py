@@ -6,6 +6,10 @@
 
 
 def take_sample(dataset, ratio):
-    if ratio >= 1:
+    if ratio > 1:
         raise Exception("ratio =" + str(ratio) + " must small than 1")
     return dataset.take(int(len(dataset) * ratio))
+
+
+def take_sample(dataset, count=10):
+    return dataset.take(10)

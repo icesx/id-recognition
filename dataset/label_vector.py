@@ -3,6 +3,7 @@
 # Author: I
 # Contact: 12157724@qq.com
 import numpy as np
+from tensorflow.python.keras.utils.np_utils import to_categorical
 
 from define import MAX_CAPTCHA, CHAR_SET, CHAR_SET_LEN
 
@@ -34,11 +35,7 @@ class LabelVector:
         return self.__label_vector
 
     def __char_list_vector(self):
-        vector = np.zeros((MAX_CAPTCHA * CHAR_SET_LEN))
-        for i, c in enumerate(list(self.__label_str)):
-            vec = self.__char2vec(c)
-            vector[i * CHAR_SET_LEN:(i + 1) * CHAR_SET_LEN] = np.copy(vec)
-        return vector
+        return [np.array(to_categorical(int(i), CHAR_SET_LEN)) for i in list(self.__label_str)]
 
     @staticmethod
     def __char2vec(c):
