@@ -5,36 +5,27 @@
 import numpy as np
 from tensorflow.python.keras.utils.np_utils import to_categorical
 
-from define import ID_LEN, CHAR_SET, CHAR_SET_LEN
+from model.model_define import ModelDefine
 
 
 class LabelVector:
-    def __init__(self, label_str):
-        self.__label_str = label_str
-        if len(label_str) != ID_LEN:
-            with__format = "the label_str len({})!= {}".format(label_str, ID_LEN)
-            print(with__format)
-            raise Exception(with__format)
-        self.__label_vector = self.__char_list_vector()
-
-    @property
-    def label(self):
-        return self.__label_str
-
-    @property
-    def vector(self):
-        return self.__label_vector
-
-    def __char_list_vector(self):
-        return [np.array(to_categorical(int(i), CHAR_SET_LEN)) for i in list(self.__label_str)]
-
-    @staticmethod
-    def __char2vec(c):
-        vector = np.zeros(CHAR_SET_LEN)
-        for j in range(CHAR_SET_LEN):
-            if CHAR_SET[j] == c:
-                vector[j] = 1
-        return vector
+    pass
+    # def __init__(self, label_str, md: ModelDefine):
+    #     self.__label_str = label_str
+    #     self.__md = md
+    #     if len(label_str) != md.label_len():
+    #         with__format = "the label_str len({})!= {}".format(label_str, md.label_len())
+    #         print(with__format)
+    #         raise Exception(with__format)
+    #     self.__label_vector = md.char_list_vector()
+    #
+    # @property
+    # def label(self):
+    #     return self.__label_str
+    #
+    # @property
+    # def vector(self):
+    #     return self.__label_vector
 
 
 if __name__ == '__main__':

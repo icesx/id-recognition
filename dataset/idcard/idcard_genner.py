@@ -12,10 +12,9 @@ import cv2
 import freetype
 import numpy as np
 
-from define import CHAR_SET, ID_LEN, IMAGE_HEIGHT, IMAGE_WIDTH
+from dataset.dataset_genner import DatasetGenn
+from model.model_define import ModelDefine
 
-
-# import unicode
 
 class TextDrawer(object):
     def __init__(self, ttf):
@@ -107,43 +106,32 @@ class TextDrawer(object):
                     img[y_pos + row][x_pos + col][2] = color[2]
 
 
-class GenIdCard(object):
-    def __init__(self):
-        self.ft = TextDrawer('fonts/OcrB2.ttf')
+class GenIdCard(DatasetGenn):
+    def __init__(self, md: ModelDefine):
+        self._textDrawer = TextDrawer('fonts/OcrB2.ttf')
+        self._md = md
 
-    # 随机生成字串，长度固定
-    @staticmethod
-    def __random_text():
+    def __random_text(self):
         text = ''
-        for i in range(ID_LEN):
-            c = random.choice(CHAR_SET)
+        for i in range(self._md.charset_len()):
+            c = random.choice(self._md.charset())
             text = text + c
         return text
 
-    # 根据生成的text，生成image,返回标签和图片元素数据
-    def gen_image(self):
-        text = self.__random_text()
-        img = np.zeros([IMAGE_HEIGHT, IMAGE_WIDTH, 3])
-        color_ = (255, 255, 255)  # Write
+    def __draw_image(self):
+        label = self.__random_text()
+        img = np.zeros([self._md.image_height(), self._md.image_width(), self._md.image_channels()])
+        color_ = (255, 255, 255)
         pos = (0, 0)
         text_size = 21
-        image = self.ft.draw_text(img, pos, text, text_size, color_)
-        # 仅返回单通道值，颜色对于汉字识别没有什么意义
-        return image, text
+        image = self._textDrawer.draw_text(img, pos, label, text_size, color_)
+        return image, label
 
-
-def genn_dataset(count, dir):
-    id_card = GenIdCard()
-    for index, val in enumerate(range(count)):
-        image_data, label = id_card.gen_image()
-        if os.path.exists(dir) is False:
-            os.mkdir(dir)
-        png_ = dir + label + ".png"
-        print(png_)
-        cv2.imwrite(png_, image_data)
-
-
-if __name__ == '__main__':
-    genn_dataset(10000, "/OTHER/dataset/id_card/train/")
-    genn_dataset(1000, "/OTHER/dataset/id_card/val/")
-    genn_dataset(100, "/OTHER/dataset/id_card/test/")
+    def gen_dataset(self, _dir, count):
+        for _ in range(count):
+            image_data, label = self.__draw_image()
+            if os.path.exists(_dir) is False:
+                os.mkdir(_dir)
+            png_ = _dir + label + ".png"
+            print(png_)
+            cv2.imwrite(png_, image_data)

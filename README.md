@@ -34,7 +34,7 @@
 #### 生成数据集
 
 ```sh
-python3 dataset_gen.py
+python3 idcard_genner.py
 ```
 
 #### 训练模型

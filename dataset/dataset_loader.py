@@ -1,12 +1,13 @@
 from dataset.image_file import *
-from define import IMAGE_HEIGHT, IMAGE_WIDTH
+from model.model_define import IdModelDefine
 
 
-class DatasetCreator:
+class DatasetLoader:
 
-    def __init__(self, height, width):
-        self.__height = height
-        self.__width = width
+    def __init__(self, md: ModelDefine):
+        self.__md = md
+        self.__height = md.image_height()
+        self.__width = md.image_width()
         self.__ds = None
         self.__base_ds = None
 
@@ -24,10 +25,10 @@ class DatasetCreator:
         return self
 
     def __load_and_preprocess_from_path_label(self, path):
-        return image_byte_array(path, self.__height, self.__width)
+        return image_byte_array(path, self.__md)
 
     def __create_dataset(self, root):
-        image_infos = image_labels(root)
+        image_infos = image_labels(root, self.__md)
         path_ds = tf.data.Dataset.from_tensor_slices([ii.path_str for ii in image_infos])
         image_ds = path_ds.map(self.__load_and_preprocess_from_path_label)
         label_ds = tf.data.Dataset.from_tensor_slices(
@@ -42,7 +43,7 @@ class DatasetCreator:
 
 
 if __name__ == '__main__':
-    dataset_creator = DatasetCreator(IMAGE_HEIGHT, IMAGE_WIDTH).load('/OTHER/dataset/id_card/train')
+    dataset_creator = DatasetLoader(IdModelDefine()).load('/OTHER/dataset/id_card/train')
     # for element in dataset_creator.sample():
     #     print("image:" + str(element[0]))
     #     print("label:" + str(element[1]))

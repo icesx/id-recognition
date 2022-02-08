@@ -2,6 +2,9 @@
 # Copyright (C)
 # Author: I
 # Contact: 12157724@qq.com
+import itertools
+import string
+
 
 def test_list():
     str = "abdcd"
@@ -11,5 +14,18 @@ def test_list():
     print(list_)
 
 
+def test_permutation():
+    choices = [
+        list(map(str, range(10))),
+        list(string.ascii_lowercase),
+        list(string.ascii_uppercase),
+    ]
+    choices = sum(choices, [])
+    print(choices)
+    samples = itertools.permutations(choices, 4)
+    print(list(samples))
+
+
 if __name__ == '__main__':
     test_list()
+    test_permutation()
