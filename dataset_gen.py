@@ -12,7 +12,7 @@ import cv2
 import freetype
 import numpy as np
 
-from define import CHAR_SET, MAX_CAPTCHA, IMAGE_HEIGHT, IMAGE_WIDTH
+from define import CHAR_SET, ID_LEN, IMAGE_HEIGHT, IMAGE_WIDTH
 
 
 # import unicode
@@ -115,7 +115,7 @@ class GenIdCard(object):
     @staticmethod
     def __random_text():
         text = ''
-        for i in range(MAX_CAPTCHA):
+        for i in range(ID_LEN):
             c = random.choice(CHAR_SET)
             text = text + c
         return text

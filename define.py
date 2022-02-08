@@ -9,8 +9,8 @@ IMAGE_WIDTH = 256
 IMAGE_CHANNELS = 1
 CHAR_SET = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 CHAR_SET_LEN = len(CHAR_SET)
-MAX_CAPTCHA = 18
-
+ID_LEN = 18
+DATASET_PATH = "/OTHER/dataset/id_card/"
 
 def work_dir():
     return str(Path(__file__).parent)

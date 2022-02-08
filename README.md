@@ -1,49 +1,59 @@
 # id-recognition
-<<<<<<< HEAD
-使用tensorflow进行图片中数字或者文字序列的识别
+基于tensorflow2 使用CNN进行图片中数字或者文字序列的识别
 
-### captcha
+### 基本过程
 
-### 基本原理
+1. 生成数字序列图片
+2. 使用CNN进行卷积识别
 
-1. 使用captcha生成验证码的数据集。
+### CNN设计
 
-2. 采用基本的卷积神经网络，进行训练。基本的网络结构如下
+参考AlexNet，结构如下
 
-   ```python
-       model = keras.Sequential([
-           keras.layers.Conv2D(32, (3, 3), input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 1)),
-           keras.layers.PReLU(),
-           keras.layers.MaxPool2D((2, 2), strides=2),
-           keras.layers.Conv2D(64, (3, 3)),
-           keras.layers.PReLU(),
-           keras.layers.MaxPool2D((2, 2), strides=2),
-           keras.layers.Conv2D(64, (3, 3), padding="same"),
-           keras.layers.PReLU(),
-           keras.layers.MaxPool2D((2, 2), strides=2),
-           keras.layers.Conv2D(96, (3, 3), padding="same"),
-           keras.layers.PReLU(),
-           keras.layers.MaxPool2D((2, 2), strides=2),
-           keras.layers.Conv2D(120, (3, 3), padding="same"),
-           keras.layers.PReLU(),
-           keras.layers.MaxPool2D((2, 2), strides=2, padding="same"),
-           keras.layers.Flatten(),
-           keras.layers.Dense(MAX_CAPTCHA * CHAR_SET_LEN),
-           keras.layers.Reshape([MAX_CAPTCHA, CHAR_SET_LEN]),
-           keras.layers.Softmax()
-       ])
-   ```
+```python
+    _model = keras.Sequential([
+        keras.layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(64, (3, 3), activation="relu"),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(128, (3, 3), activation="relu"),
+        keras.layers.MaxPool2D((2, 2)),
+        keras.layers.Conv2D(64, (1, 1), activation="relu"),
+        keras.layers.Flatten(),
+        keras.layers.Dense(1024, activation='relu'),
+        keras.layers.Dense(ID_LEN * CHAR_SET_LEN, activation="softmax"),
+        keras.layers.Reshape([ID_LEN, CHAR_SET_LEN]),
+    ])
+```
 
-3. 不知道为何如果没有`keras.layers.PReLU()`会无法收敛，后续再找资料查询一下。
+1. ID_LEN：生成的id号码的长度
+2. CHAR_SET_LEN：生成Id号码的字符集（0-9）长度
 
-4. MAX_CAPTCHA 为验证码的长度
+### 使用
 
-5. CHAR_SET_LEN为验证码的所有字符集的长度
+#### 生成数据集
 
-6. 相当于对神经网络预测one-hot编码
+```sh
+python3 dataset_gen.py
+```
 
-### 训练过程
+#### 训练模型
 
-=======
-id-recognition
->>>>>>> cdcaca27417a25e0bd174c9e8c08582d3692be39
+```sh
+python3 model_train.py
+```
+
+### 预测
+
+```sh
+python3 model_predict.py
+```
+
+在默认的参数情况下，基本上可以达到100%的准确率。
+
+
+
+### 参考地址
+
+https://github.com/JackonYang/captcha-tensorflow
+

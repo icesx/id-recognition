@@ -5,7 +5,7 @@
 import tensorflow as tf
 from tensorflow import keras
 
-from define import IMAGE_WIDTH, IMAGE_HEIGHT, MAX_CAPTCHA, CHAR_SET_LEN, IMAGE_CHANNELS
+from define import IMAGE_WIDTH, IMAGE_HEIGHT, ID_LEN, CHAR_SET_LEN, IMAGE_CHANNELS
 from utils import tf_board
 from utils.gpu_init import gpu_init
 
@@ -22,8 +22,8 @@ def run_model(train_ds, val_ds, epochs, steps_per_epoch):
         keras.layers.Conv2D(64, (1, 1), activation="relu"),
         keras.layers.Flatten(),
         keras.layers.Dense(1024, activation='relu'),
-        keras.layers.Dense(MAX_CAPTCHA * CHAR_SET_LEN, activation="softmax"),
-        keras.layers.Reshape([MAX_CAPTCHA, CHAR_SET_LEN]),
+        keras.layers.Dense(ID_LEN * CHAR_SET_LEN, activation="softmax"),
+        keras.layers.Reshape([ID_LEN, CHAR_SET_LEN]),
     ])
     _model.compile(optimizer="adam",
                    loss="categorical_crossentropy",

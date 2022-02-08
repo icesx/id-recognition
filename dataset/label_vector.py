@@ -5,14 +5,14 @@
 import numpy as np
 from tensorflow.python.keras.utils.np_utils import to_categorical
 
-from define import MAX_CAPTCHA, CHAR_SET, CHAR_SET_LEN
+from define import ID_LEN, CHAR_SET, CHAR_SET_LEN
 
 
 class LabelVector:
     def __init__(self, label_str):
         self.__label_str = label_str
-        if len(label_str) != MAX_CAPTCHA:
-            with__format = "the label_str len({})!= {}".format(label_str, MAX_CAPTCHA)
+        if len(label_str) != ID_LEN:
+            with__format = "the label_str len({})!= {}".format(label_str, ID_LEN)
             print(with__format)
             raise Exception(with__format)
         self.__label_vector = self.__char_list_vector()
