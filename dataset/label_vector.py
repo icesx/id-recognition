@@ -41,7 +41,5 @@ if __name__ == '__main__':
     lv = LabelVector("610123198301084512")
     print(list(lv.label))
     print(lv.vector)
-    print(vec2text(lv.vector))
     lv2 = LabelVector("610233940505040400")
     print(lv2.vector)
-    print(vec2text(lv2.vector))

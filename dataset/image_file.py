@@ -11,27 +11,6 @@ from dataset.label_vector import LabelVector
 from define import IMAGE_CHANNELS
 
 
-class LabelInfo:
-
-    def __init__(self, label_idx: int, label_name: str):
-        self.__label_name = label_name
-        self.__label_idx = label_idx
-
-    def __str__(self):
-        return str(self.__label_idx) + ":" + self.__label_name
-
-    def __repr__(self):
-        return str(self)
-
-    @property
-    def label_name(self):
-        return self.__label_name
-
-    @property
-    def label_idx(self):
-        return self.__label_idx
-
-
 class ImageInfo:
 
     def __init__(self, path):

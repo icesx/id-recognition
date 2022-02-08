@@ -2,16 +2,22 @@
 # Copyright (C)
 # Author: I
 # Contact: 12157724@qq.com
-
+import numpy as np
 import tensorflow as tf
 from matplotlib import pyplot as plt
+
+from dataset.image_file import image_byte_array
 
 
 def _format_y(y):
     return ''.join(map(lambda x: str(x), y))
 
 
-def predict(model, ds):
+def predict(model, img_path, image_height, image_width):
+    return model.predict(np.expand_dims(image_byte_array(img_path, image_height, image_width), axis=0))
+
+
+def predict_plt(model, ds):
     batch = 5
     take_time = 6
     '''

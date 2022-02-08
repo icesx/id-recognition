@@ -146,3 +146,4 @@ def genn_dataset(count, dir):
 if __name__ == '__main__':
     genn_dataset(10000, "/OTHER/dataset/id_card/train/")
     genn_dataset(1000, "/OTHER/dataset/id_card/val/")
+    genn_dataset(100, "/OTHER/dataset/id_card/test/")
