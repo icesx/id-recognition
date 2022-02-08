@@ -12,4 +12,4 @@ def take_sample(dataset, ratio):
 
 
 def take_sample(dataset, count=10):
-    return dataset.take(10)
+    return dataset.take(count)

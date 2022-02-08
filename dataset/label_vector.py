@@ -8,15 +8,6 @@ from tensorflow.python.keras.utils.np_utils import to_categorical
 from define import MAX_CAPTCHA, CHAR_SET, CHAR_SET_LEN
 
 
-def vec2text(vector):
-    text = ''
-    v_len = len(vector)
-    for i in range(v_len):
-        if vector[i] == 1:
-            text = text + CHAR_SET[i % CHAR_SET_LEN]
-    return text
-
-
 class LabelVector:
     def __init__(self, label_str):
         self.__label_str = label_str

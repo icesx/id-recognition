@@ -13,23 +13,28 @@ def _format_y(y):
 
 def predict(model, ds):
     batch = 5
-    take_number = 6
-    ds = ds.batch(batch)
-    fig, axes = plt.subplots(take_number, batch, figsize=(30, 20))
-    i = 0
-    for element in ds.take(take_number).as_numpy_iterator():
+    take_time = 6
+    '''
+    take 6 time per 5 number
+    '''
+    ds = ds.batch(batch).take(take_time)
+    fig, axes = plt.subplots(take_time, batch, figsize=(30, 20))
+    _index = 0
+    for element in ds.as_numpy_iterator():
         images = element[0]
         label = element[1]
-        label_pred = model.predict_on_batch(images)
+        label_predict = model.predict_on_batch(images)
         label_true = tf.math.argmax(label, axis=-1)
-        label_pred = tf.math.argmax(label_pred, axis=-1)
-        for (lts, lps, imgs) in zip(label_true, label_pred, images):
+        label_predict = tf.math.argmax(label_predict, axis=-1)
+        for (lts, lps, img) in zip(label_true, label_predict, images):
             print("true:%s->predict:%s" % (lts, lps))
-            ax = axes.flat[i]
-            ax.imshow(imgs)
-            ax.set_title('pred: %s' % _format_y(lps.numpy()))
-            ax.set_xlabel('true: %s' % _format_y(lts.numpy()))
+            ax = axes.flat[_index]
+            ax.imshow(img)
+            lps_str = _format_y(lps.numpy())
+            lts_str = _format_y(lts.numpy())
+            ax.set_title('predict: %s [%s]' % (lps_str, (lts_str is lts_str)))
+            ax.set_xlabel('label: %s' % lts_str)
             ax.set_xticks([])
             ax.set_yticks([])
-            i += 1
+            _index += 1
     plt.show()

@@ -5,6 +5,7 @@
 # 3/23/21
 
 import copy
+import os
 import random
 
 import cv2
@@ -131,13 +132,10 @@ class GenIdCard(object):
         return image, text
 
 
-import os
-
-
 def genn_dataset(count, dir):
-    genObj = GenIdCard()
+    id_card = GenIdCard()
     for index, val in enumerate(range(count)):
-        image_data, label = genObj.gen_image()
+        image_data, label = id_card.gen_image()
         if os.path.exists(dir) is False:
             os.mkdir(dir)
         png_ = dir + label + ".png"
