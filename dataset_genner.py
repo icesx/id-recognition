@@ -16,9 +16,9 @@ def genn_id_card():
 
 def genn_captcha():
     genn = GenCaptcha(CaptchaModelDefine())
-    genn.gen_dataset("/OTHER/dataset/captcha/train/", 10000)
-    genn.gen_dataset("/OTHER/dataset/captcha/val/", 1000)
-    genn.gen_dataset("/OTHER/dataset/captcha/test/", 30)
+    genn.gen_dataset("/OTHER/dataset/captcha/train/", 30000)
+    genn.gen_dataset("/OTHER/dataset/captcha/val/", 3000)
+    genn.gen_dataset("/OTHER/dataset/captcha/test/", 300)
 
 
 if __name__ == '__main__':

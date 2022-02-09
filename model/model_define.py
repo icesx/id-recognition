@@ -134,7 +134,7 @@ class IdModelDefine(ModelDefine):
 
 class CaptchaModelDefine(ModelDefine):
     __CHAR_SET_OR = [
-        list(string.digits),
+        # list(string.digits),
         list(string.ascii_lowercase),
         list(string.ascii_uppercase),
     ]
@@ -163,7 +163,7 @@ class CaptchaModelDefine(ModelDefine):
         return self.__DATASET_PATH + "test/"
 
     def steps_per_epoch(self):
-        return 100
+        return 300
 
     def epochs(self):
         return 20

@@ -18,16 +18,12 @@ class GenCaptcha(DatasetGenn):
     def __init__(self, md: ModelDefine):
         self._md = md
 
-    def gen_dataset(self, _dir, count):
+    def _gen_dataset(self, _dir, count):
         choices = list(itertools.permutations(self._md.charset(), self._md.label_len()))
         self.__gen_captcha(_dir, choices=choices,
                            max_images_count=count)
 
     def __gen_captcha(self, img_dir, choices, max_images_count):
-        if os.path.exists(img_dir):
-            shutil.rmtree(img_dir)
-        if not os.path.exists(img_dir):
-            os.makedirs(img_dir)
         image = ImageCaptcha(width=self._md.image_width(), height=self._md.image_height())
         samples = random.sample(choices, max_images_count)
         for i in samples:

@@ -127,7 +127,7 @@ class GenIdCard(DatasetGenn):
         image = self._textDrawer.draw_text(img, pos, label, text_size, color_)
         return image, label
 
-    def gen_dataset(self, _dir, count):
+    def _gen_dataset(self, _dir, count):
         for _ in range(count):
             image_data, label = self.__draw_image()
             if os.path.exists(_dir) is False:
