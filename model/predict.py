@@ -7,17 +7,14 @@ import tensorflow as tf
 from matplotlib import pyplot as plt
 
 from dataset.image_file import image_byte_array
+from model.model_define import ModelDefine
 
 
-def _format_y(y):
-    return ''.join(map(lambda x: str(x), y))
+def predict(model, img_path, md: ModelDefine):
+    return model.predict(np.expand_dims(image_byte_array(img_path, md), axis=0))
 
 
-def predict(model, img_path, image_height, image_width):
-    return model.predict(np.expand_dims(image_byte_array(img_path, image_height, image_width), axis=0))
-
-
-def predict_plt(model, ds):
+def predict_plt(model, ds, md: ModelDefine):
     batch = 5
     take_time = 6
     '''
@@ -36,9 +33,9 @@ def predict_plt(model, ds):
             print("true:%s->predict:%s" % (lts, lps))
             ax = axes.flat[_index]
             ax.imshow(img)
-            lps_str = _format_y(lps.numpy())
-            lts_str = _format_y(lts.numpy())
-            ax.set_title('predict: %s [%s]' % (lps_str, (lts_str is lts_str)))
+            lps_str = md.format_y(lps.numpy())
+            lts_str = md.format_y(lts.numpy())
+            ax.set_title('predict: %s [%s]' % (lps_str, (lps_str == lts_str)))
             ax.set_xlabel('label: %s' % lts_str)
             ax.set_xticks([])
             ax.set_yticks([])

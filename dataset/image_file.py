@@ -48,7 +48,7 @@ def __image_paths(root, md: ModelDefine) -> [ImageInfo]:
     return image_infos
 
 
-def image_labels(root: object, md: ModelDefine) -> [ImageInfo]:
+def image_labels(root: str, md: ModelDefine) -> [ImageInfo]:
     root_path = pathlib.Path(root)
     image_infos = __image_paths(root_path, md)
     print("First 1 images: ", image_infos[:1])

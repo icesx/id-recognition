@@ -66,6 +66,9 @@ class ModelDefine:
     def label_space_len(self):
         pass
 
+    def format_y(self, label_vector):
+        pass
+
 
 class IdModelDefine(ModelDefine):
     IMAGE_HEIGHT = 32
@@ -96,7 +99,7 @@ class IdModelDefine(ModelDefine):
         return 100
 
     def epochs(self):
-        return 3
+        return 5
 
     def val_batch(self):
         return 10
@@ -125,14 +128,17 @@ class IdModelDefine(ModelDefine):
     def char_list_vector(self, label_str):
         return [np.array(to_categorical(int(i), self.label_space_len())) for i in list(label_str)]
 
+    def format_y(self, label_vector):
+        return ''.join(map(lambda x: str(x), label_vector))
+
 
 class CaptchaModelDefine(ModelDefine):
-    IMAGE_CHANNELS = 3
     choices = [
         list(string.digits),
         list(string.ascii_lowercase),
         list(string.ascii_uppercase),
     ]
+    IMAGE_CHANNELS = 3
     CHAR_SET = sum(choices, [])
     CHAR_SET_LEN = len(CHAR_SET)
     LABEL_LEN = 4
@@ -160,7 +166,7 @@ class CaptchaModelDefine(ModelDefine):
         return 100
 
     def epochs(self):
-        return 3
+        return 20
 
     def val_batch(self):
         return 10
@@ -188,3 +194,6 @@ class CaptchaModelDefine(ModelDefine):
 
     def char_list_vector(self, label_str):
         return [np.array(to_categorical(ord(i), self.label_space_len())) for i in list(label_str)]
+
+    def format_y(self, label_vector):
+        return ''.join(map(lambda x: chr(x), label_vector))

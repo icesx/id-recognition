@@ -20,13 +20,10 @@ class GenCaptcha(DatasetGenn):
 
     def gen_dataset(self, _dir, count):
         choices = list(itertools.permutations(self._md.charset(), self._md.label_len()))
-        self._gen_captcha(_dir, choices=choices,
-                          max_images_count=count)
+        self.__gen_captcha(_dir, choices=choices,
+                           max_images_count=count)
 
-    def _get_choices(self, num_per_image):
-        return list(itertools.permutations(self._md.charset(), num_per_image))
-
-    def _gen_captcha(self, img_dir, choices, max_images_count):
+    def __gen_captcha(self, img_dir, choices, max_images_count):
         if os.path.exists(img_dir):
             shutil.rmtree(img_dir)
         if not os.path.exists(img_dir):

@@ -4,7 +4,7 @@
 # Contact: 12157724@qq.com
 from dataset.dataset_loader import DatasetLoader
 from model.model import run_model, save_model
-from model.model_define import ModelDefine, CaptchaModelDefine, IdModelDefine
+from model.model_define import ModelDefine, CaptchaModelDefine
 from model.predict import predict_plt
 
 
@@ -17,7 +17,7 @@ def train(md: ModelDefine):
     save_model(model, md.save_path())
     test_creator = DatasetLoader(md)
     _test_ds = test_creator.load(md.test_path())
-    predict_plt(model, _test_ds.base_ds())
+    predict_plt(model, _test_ds.base_ds(), md)
 
 
 def train_captcha():

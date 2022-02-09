@@ -4,20 +4,21 @@
 # Contact: 12157724@qq.com
 from dataset.captcha.captcha_genner import GenCaptcha
 from dataset.idcard.idcard_genner import GenIdCard
+from model.model_define import CaptchaModelDefine, IdModelDefine
 
 
 def genn_id_card():
-    genn = GenIdCard()
+    genn = GenIdCard(IdModelDefine())
     genn.gen_dataset("/OTHER/dataset/id_card/train/", 10000)
     genn.gen_dataset("/OTHER/dataset/id_card/val/", 1000)
     genn.gen_dataset("/OTHER/dataset/id_card/test/", 100)
 
 
 def genn_captcha():
-    genn = GenCaptcha()
-    genn.gen_dataset("/OTHER/dataset/captcha/train/", 1000)
+    genn = GenCaptcha(CaptchaModelDefine())
+    genn.gen_dataset("/OTHER/dataset/captcha/train/", 10000)
     genn.gen_dataset("/OTHER/dataset/captcha/val/", 1000)
-    genn.gen_dataset("/OTHER/dataset/captcha/test/", 10)
+    genn.gen_dataset("/OTHER/dataset/captcha/test/", 30)
 
 
 if __name__ == '__main__':

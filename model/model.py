@@ -23,7 +23,7 @@ def run_model(train_ds, val_ds, md: ModelDefine):
         keras.layers.Conv2D(64, (1, 1), activation="relu"),
         keras.layers.Flatten(),
         keras.layers.Dense(1024, activation='relu'),
-        keras.layers.Dense(md.label_space_len() * md.label_len(), activation="softmax"),
+        keras.layers.Dense(md.label_len() * md.label_space_len(), activation="softmax"),
         keras.layers.Reshape([md.label_len(), md.label_space_len()]),
     ])
     _model.compile(optimizer="adam",
@@ -35,12 +35,12 @@ def run_model(train_ds, val_ds, md: ModelDefine):
                steps_per_epoch=md.steps_per_epoch(),
                validation_steps=md.steps_per_epoch(),
                validation_data=val_ds,
-               callbacks=[tf_board.tb.tf_board_instance("id-recognition")]
+               callbacks=[tf_board.tb.tf_board_instance(md.name())]
                )
     return _model
 
 
 def save_model(_model, export_dir):
-    print("save model ", _model, "to dir ", export_dir, "..")
+    print("save model ", _model, "to dir ", export_dir)
     tf.saved_model.save(_model, export_dir=export_dir)
     print("saved")
