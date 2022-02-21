@@ -9,8 +9,9 @@ import random
 
 from captcha.image import ImageCaptcha
 
+from dataset.captcha.captcha_define import CaptchaModelDefine
 from dataset.dataset_genner import DatasetGenn
-from model.model_define import ModelDefine, CaptchaModelDefine
+from model.model_define import ModelDefine
 
 
 class GenCaptcha(DatasetGenn):
@@ -33,4 +34,4 @@ class GenCaptcha(DatasetGenn):
 
 
 if __name__ == '__main__':
-    GenCaptcha(CaptchaModelDefine()).gen_dataset("/OTHER/dataset/captcha/train", 10)
+    GenCaptcha(CaptchaModelDefine()).__gen_dataset("/OTHER/dataset/captcha/train", 10)

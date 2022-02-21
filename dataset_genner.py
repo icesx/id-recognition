@@ -2,25 +2,36 @@
 # Copyright (C)
 # Author: I
 # Contact: 12157724@qq.com
+from dataset.captcha.captcha_define import CaptchaModelDefine
 from dataset.captcha.captcha_genner import GenCaptcha
+from dataset.eartag.eartag_define import EartagModelDefine
+from dataset.eartag.eartag_genner import GenEartag
+from dataset.idcard.idcard_define import IdModelDefine
 from dataset.idcard.idcard_genner import GenIdCard
-from model.model_define import CaptchaModelDefine, IdModelDefine
 
 
-def genn_id_card():
+def gen_idcard():
     genn = GenIdCard(IdModelDefine())
-    genn.gen_dataset("/OTHER/dataset/id_card/train/", 10000)
-    genn.gen_dataset("/OTHER/dataset/id_card/val/", 1000)
-    genn.gen_dataset("/OTHER/dataset/id_card/test/", 100)
+    genn.gen_train(10000)
+    genn.gen_val(1000)
+    genn.gen_test(100)
 
 
-def genn_captcha():
+def gen_captcha():
     genn = GenCaptcha(CaptchaModelDefine())
-    genn.gen_dataset("/OTHER/dataset/captcha/train/", 30000)
-    genn.gen_dataset("/OTHER/dataset/captcha/val/", 3000)
-    genn.gen_dataset("/OTHER/dataset/captcha/test/", 300)
+    genn.gen_train(30000)
+    genn.gen_val(3000)
+    genn.gen_test(300)
+
+
+def gen_eartag():
+    gen = GenEartag(EartagModelDefine())
+    gen.gen_train(30)
+    gen.gen_val(10)
+    gen.gen_test(3)
 
 
 if __name__ == '__main__':
     # genn_id_card()
-    genn_captcha()
+    # genn_captcha()
+    gen_eartag()

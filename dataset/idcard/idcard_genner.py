@@ -18,7 +18,7 @@ from model.model_define import ModelDefine
 class GenIdCard(DatasetGenn):
     def __init__(self, md: ModelDefine):
         super().__init__(md)
-        self._textDrawer = TextDrawer(root + '/fonts/OcrB2.ttf')
+        self._textDrawer = TextDrawer(root + '/fonts/simhei.ttf')
 
     def __random_text(self):
         text = ''
