@@ -18,9 +18,12 @@ class EartagWrite():
         self.__font_path = root + "/fonts/simhei.ttf"
 
     def write(self, label, label2, path):
+        font_size = random.randrange(30, 40)
         img_bg = create_image(size=(200, 200), color=(255, 255, 255))
-        img = draw_text(img_bg, self.__font_path, label, rotate=96, position=(10, 10))
-        img = draw_text(img, self.__font_path, label2, rotate=0, position=(30, 10))
+        img = draw_text(img_bg, self.__font_path, label, rotate=random.randrange(88, 95),
+                        position=(random.randrange(5, 10), random.randrange(5, 10)),
+                        font_size=font_size)
+        img = draw_text(img, self.__font_path, label2, rotate=0, position=(font_size, 10), font_size=font_size)
         noise(img, 200, 200, 10, 100)
         save_image(img, path)
 

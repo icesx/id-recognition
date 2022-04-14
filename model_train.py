@@ -2,9 +2,10 @@
 # Copyright (C)
 # Author: I
 # Contact: 12157724@qq.com
+from dataset.captcha.captcha_define import CaptchaModelDefine
 from dataset.dataset_loader import DatasetLoader
 from model.model import run_model, save_model
-from model.model_define import ModelDefine, CaptchaModelDefine
+from model.model_define import ModelDefine
 from model.predict import predict_plt
 
 

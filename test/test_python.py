@@ -2,6 +2,7 @@
 # Copyright (C)
 # Author: I
 # Contact: 12157724@qq.com
+import datetime
 import itertools
 import string
 
@@ -34,3 +35,4 @@ def test_permutation2():
 if __name__ == '__main__':
     test_list()
     test_permutation2()
+    print("./tmp/logs/tb/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))

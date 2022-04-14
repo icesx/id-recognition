@@ -1,5 +1,5 @@
+from dataset.idcard.idcard_define import IdModelDefine
 from dataset.image_file import *
-from model.model_define import IdModelDefine
 
 
 class DatasetLoader:

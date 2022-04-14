@@ -25,9 +25,9 @@ def show_image(img):
     img.show()
 
 
-def draw_text(__img_bg, font_path, text, text_color=(0, 0, 255), position=(0, 0), rotate=0):
+def draw_text(__img_bg, font_path, text, text_color=(0, 0, 255), position=(0, 0), rotate=0, font_size=20):
     draw = ImageDraw.Draw(__img_bg)
-    font = ImageFont.truetype(font_path, 20)
+    font = ImageFont.truetype(font_path, size=font_size)
     draw.text(position, text, text_color, font=font)
     return __img_bg.rotate(rotate, expand=1, fillcolor=(255, 255, 255))
 

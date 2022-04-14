@@ -66,7 +66,7 @@ class ModelDefine:
         pass
 
     def name(self):
-        pass
+        return self._name
 
     def save_path(self):
         return SAVE_MODEL_ + self._name
